@@ -273,7 +273,7 @@ event LogRegister(address investor, string key);
 1. run `testrpc -a 20 -l 500000000000000` in terminal
 2. run `truffle test` in another terminal to execute tests.
 
-##Structure of tests
+## Structure of tests
 1. check that function setRate works properly
 2. try to buy tokens before starting round(test gives an error that falls to .catch)
 3. start round
@@ -293,7 +293,7 @@ event LogRegister(address investor, string key);
 17. freeze tokens
 18. check that tokens are frozen (try to send from one account to another)
 
-##Deploy contract with truffle to network
+## Deploy contract with truffle to network
 
 1. Change parameters of constructor in migrations/2_deploy_contracts.js
 2. Add network to truffle.js:
