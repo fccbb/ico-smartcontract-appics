@@ -1,32 +1,306 @@
-## Описание теста для смарт контракта AppicsIco
+# Appics ICO Contract
+
+Please see below description of [Appics ICO][appics] smart contract developed by [Phenom.Team][phenom].
+
+## Overview
+Appics Token smart-contract is structured upon [ERC20 standard](erc20).
+One of distinctive features of the smart-contract is the fact that token price is fixed and pegged to USD instead of ETH which protects investors from volatility risks of ETH currency. This technical feature is made possible by usage of Oracle that updates ETH/USD actual exchange rate in the smart contract every 30 minutes. The token price is set to $0.15 apiece.
+
+Ethereum is not the only currency investors can use when investing, they can also opt to purchase Appics tokens with BTC, LTC, BCC and even USD (in debit cards). Processing of transactions in these currencies is enabled by automated platform, which processes every single incoming transaction and calculates it's USD equivalent. It also tracks number of confirmations of every single transaction and emits tokens to Ethereum address of an investor, he specified in his personal profile web page. Emission itself is processed by bringing up of buyForInvestor method directly from cotroller-addresses (controllersOnly). In order to ensure smooth real-time emission of Appics tokens, a unique sharding technology developed by  [Phenom.Team][phenom] is used. The basics of the technology boils down to the procedure wherein the whole emission process is distributed among three controller-addresses, which allows to perform fast real-time token emission  even when the whole Ethereum network is overloaded.
 
 
-__Как запустить тест:__
+## The Crowdsale Specification
+*	Appics token is ERC-20 compliant.
+*   Allocation of Appics tokens goes in the following way:
+    Appics 20 %
+	  Ecosystem 20 %
+	  Steemit 5 %
+	  Bounty 5 %
+		PublicIco 50 %
 
-- запусть testrpc:  ``` testrpc -a 20 -l 500000000000000 ```
 
-- запустить тест  ```truffle test```
+## Code
 
-__Структура теста:__
+#### AppicsICO Functions
 
-Для каждого из 5 раундов тестирование производится по следующей схеме:
+**Fallback function**
+```cs
+function() external payable
+```
+Fallback function calls function buyTokens(address _investor, uint256 _xapValue) to create tokens when investor sends ETH directly to ICO smart contract address.
 
-- проверяем корректность функции setRate 
-- не начиная раунд, пытаемся купить токены(транзакция откатывается, исключение отлавливается в .catсh)
-- стартуем раунд
-- проверяем коррекность начисления бонусов
-- ставим Rate_Eth = 1, чтобы проще было проверять корректность округления(1$ = 20/3  XAP)
-- покупаем токенов на 30, 31 и 32 Wei(перебираем остатки от деления на 3) и проверяем корректность округления
-- проверяем, что нельзя вывести эфир на адрес компании(раунд ещё не закончен)
-- паузим раунд
-- проверям, что во время паузы нельзя купить токены
-- заново стартуем раунд
-- проверяем, что после повторного старта снова можно купить токены
-- заканчиваем раунд
-- проверям, что когда раунд окончен, купить токены нельзя
-- размораживаем токены
-- выводим деньги с контракта на адресс компании
-- проверям, что токены разморожены(отправляем токены с одного аккаунта на другой)
-- замораживаем токены
-- проверям, что токены действительно заморожены(пытаемся сделать transfer)  
+**setRate**
+```cs
+function setRate(uint256 _RateEth) external oracleOnly
+```
+Set ETH/USD exchange rate and update token price.
 
+**startPreSaleRound**
+```cs
+function startPreSaleRound() external managerOnly
+```
+Set ICO status to PreSaleStarted.
+
+**pausePreSaleRound**
+```cs
+function pausePreSaleRound() external managerOnly
+```
+Set Ico status to PreSalePaused.
+
+**finishPreSaleRound**
+```cs
+function finishPreSaleRound() external managerOnly
+```
+Set ICO status to PreSaleFinished.
+
+**startRoundA**
+```cs
+function startRoundA() external managerOnly
+```
+Set ICO status to RoundAStarted.
+
+**pauseRoundA**
+```cs
+function pauseRoundA() external managerOnly
+```
+Set ICO status to RoundAPaused.
+
+**finishRoundA**
+```cs
+function finishRoundA() external managerOnly
+```
+Finish round A and allocate tokens for AppicsFund, EcosystemFund, SteemitFund, BountyFund.
+
+**startRoundB**
+```cs
+function startRoundB() external managerOnly
+```
+Set ICO status to RoundBStarted.
+
+**pauseRoundB**
+```cs
+function pauseRoundB() external managerOnly
+```
+Set ICO status to RoundBPaused.
+
+**finishRoundB**
+```cs
+function finishRoundB() external managerOnly
+```
+Finish round B and allocate tokens for AppicsFund, EcosystemFund, SteemitFund, BountyFund.
+
+**startRoundC**
+```cs
+function startRoundC() external managerOnly
+```
+Set ICO status to RoundCStarted.
+
+**pauseRoundC**
+```cs
+function pauseRoundC() external managerOnly
+```
+Set ICO status to RoundCPaused.
+
+**finishRoundC**
+```cs
+function finishRoundC() external managerOnly
+```
+Finish round C and allocate tokens for AppicsFund, EcosystemFund, SteemitFund, BountyFund.
+
+**startRoundD**
+```cs
+function startRoundD() external managerOnly
+```
+Set ICO status to RoundDStarted.
+
+**pauseRoundD**
+```cs
+function pauseRoundD() external managerOnly
+```
+Set ICO status to RoundDPaused.
+
+**finishRoundD**
+```cs
+function finishRoundD() external managerOnly
+```
+Finish round D and allocate tokens for AppicsFund, EcosystemFund, SteemitFund, BountyFund.
+
+**unfreeze**
+```cs
+function unfreeze() external managerOnly
+```
+Unfreezes tokens (enable token transfers).
+
+**freeze**
+```cs
+function freeze() external managerOnly
+```
+freezes tokens.
+
+**buyForInvestor**
+```cs
+function buyForInvestor(address _investor,uint256 _xapValue,string _txHash) external controllersOnly
+```
+buyForInvestor function is called by one of controllers. It uses buyTokens(address _investor, uint256 _xapValue) function to allocate tokens to investors who make a deposit in non-ETH currencies.
+
+**buyTokens**
+```cs
+function buyTokens(address _investor, uint256 _xapValue) internal startedOnly
+```
+internal function that called by buyForInvestor and fallback functions
+
+**getBonus**
+```cs
+function getBonus(uint256 _value) public constant returns(uint256)
+```
+get current bonus
+
+**register**
+```cs
+function register(string _key) public
+```
+allows investors to add their public key of Appics blockchain
+
+**withdrawEther**
+```cs
+function withdrawEther(uint256 _value) external managerOnly
+```
+
+#### AppicsIco Events
+
+**LogStartPreSaleRound**
+```cs
+event LogStartPreSaleRound();
+```
+**LogPausePreSaleRound**
+```cs
+event LogPausePreSaleRound();
+```
+**LogFinishPreSaleRound**
+```cs
+event LogFinishPreSaleRound(
+      address AppicsFund,
+      address EcosystemFund,
+      address SteemitFund,
+      address BountyFund
+);
+```
+**LogStartRoundA**
+```cs
+event LogStartRoundA();
+```
+**LogPauseRoundA**
+```cs
+event LogPauseRoundA();
+```
+**LogFinishRoundA**
+```cs
+event LogFinishRoundA(
+      address AppicsFund,
+      address EcosystemFund,
+      address SteemitFund,
+      address BountyFund
+);
+```
+**LogStartRoundB**
+```cs
+event LogStartRoundB();
+```
+**LogPauseRoundB**
+```cs
+event LogPauseRoundB();
+```
+**LogFinishRoundB**
+```cs
+event LogFinishRoundB(
+      address AppicsFund,
+      address EcosystemFund,
+      address SteemitFund,
+      address BountyFund
+);
+```
+**LogStartRoundC**
+```cs
+event LogStartRoundC();
+```
+**LogPauseRoundC**
+```cs
+event LogPauseRoundC();
+```
+**LogFinishRoundC**
+```cs
+event LogFinishRoundC(
+      address AppicsFund,
+      address EcosystemFund,
+      address SteemitFund,
+      address BountyFund
+);
+```
+**LogStartRoundD**
+```cs
+event LogStartRoundD();
+```
+**LogPauseRoundD**
+```cs
+event LogPauseRoundD();
+```
+**LogFinishRoundD**
+```cs
+event LogFinishRoundD(
+      address AppicsFund,
+      address EcosystemFund,
+      address SteemitFund,
+      address BountyFund
+);
+```
+**LogBuyForInvestor**
+```cs
+event LogBuyForInvestor(address investor, uint256 aidValue, string txHash);
+```
+**LogRegister**
+```cs
+event LogRegister(address investor, string key);
+```
+
+
+## Prerequisites
+1. nodejs, and make sure it's version above 8.0.0
+2. npm
+3. truffle
+4. testrpc
+
+## Run tests
+1. run `testrpc -a 20 -l 500000000000000` in terminal
+2. run `truffle test` in another terminal to execute tests.
+
+##Structure of tests
+1. check that function setRate works properly
+2. try to buy tokens before starting round(test gives an error that falls to .catch)
+3. start round
+4. check that function getBonus works properly
+5. set RateETH = 1 to check that contract rounds numbers right(1$ = 20/3 XAP)
+6. buy tokens for 30, 31, 32 Wei and watch how contract rounds numbers
+7. check we can't withdraw ether(round isn't finished)
+8. pause round
+9. check that we cannot buy tokens
+10. start round again
+11. check that we can buy tokens after second start
+12. finish round
+13. check that we cannot buy tokens
+14. unfreeze tokens
+15. withdraw ether
+16. check that tokens aren't frozen (send from one account to another)
+17. freeze tokens
+18. check that tokens are frozen (try to send from one account to another)
+
+## Collaborators
+
+* **[Alex Smirnov](https://github.com/AlekseiSmirnov)**
+* **[Max Petriev](https://github.com/maxpetriev)**
+* **[Dmitriy Pukhov](https://github.com/puhoshville)**
+* **[Kate Krishtopa](https://github.com/Krishtopa)**
+
+
+[appics]: https://appics.com/
+[phenom]: https://phenom.team/
+[erc20]: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md
