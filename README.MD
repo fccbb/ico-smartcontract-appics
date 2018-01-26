@@ -293,6 +293,21 @@ event LogRegister(address investor, string key);
 17. freeze tokens
 18. check that tokens are frozen (try to send from one account to another)
 
+##Deploy contract with truffle to network
+
+1. Change parameters of constructor in migrations/2_deploy_contracts.js
+2. Add network to truffle.js:
+    live: {
+      host: "localhost",
+      port: 8545, //port where node is running
+      network_id: "1" ,// Match any network id. 1- live network, 2 - ropsten, 3 - rinkeby
+      gas: 7721975 //optional
+    }
+3. In console in ico-smartcontract-appics then run: truffle compile
+4. In geth console unlock wallet which will be used for deploy
+5. Then use command: truffle migrate --network live
+
+   More information about deploy with truffle [here][truffle]
 ## Collaborators
 
 * **[Alex Smirnov](https://github.com/AlekseiSmirnov)**
@@ -304,3 +319,4 @@ event LogRegister(address investor, string key);
 [appics]: https://appics.com/
 [phenom]: https://phenom.team/
 [erc20]: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md
+[truffle]: http://truffleframework.com/tutorials/deploying-to-the-live-network
