@@ -12,11 +12,11 @@ Ethereum is not the only currency investors can use when investing, they can als
 ## The Crowdsale Specification
 *	Appics token is ERC-20 compliant.
 *   Allocation of Appics tokens goes in the following way:
-    Appics 20 %
-	  Ecosystem 20 %
-	  Steemit 5 %
-	  Bounty 5 %
-		PublicIco 50 %
+  *  Appics 20 %
+	*  Ecosystem 20 %
+	*  Steemit 5 %
+	*  Bounty 5 %
+	*  PublicIco 50 %
 
 
 ## Code
