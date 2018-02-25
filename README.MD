@@ -270,7 +270,7 @@ event LogRegister(address investor, string key);
 4. testrpc
 
 ## Run tests
-1. run `testrpc -a 20 -l 500000000000000` in terminal
+1. run `testrpc -a 20 -l 8000000` in terminal
 2. run `truffle test` in another terminal to execute tests.
 
 ## Structure of tests
