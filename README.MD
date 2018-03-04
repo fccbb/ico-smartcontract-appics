@@ -159,7 +159,7 @@ get current bonus
 ```cs
 function register(string _key) public
 ```
-allows investors to add their public key of Appics blockchain
+allows investors to link their Ethereum wallet to Steem account in order to receive SMT tokens after token swap procedure 
 
 **withdrawEther**
 ```cs
